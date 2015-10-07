@@ -22,12 +22,32 @@ Or install it yourself as:
 
 ## Usage
 
-# Setup database and table
+### Setup database and table
 
 You need to create the following table in your postgres or redshift database:
 
     CREATE TABLE events (created_at timestamp, name varchar(200), properties json);
 
+Now you need to tell the gem how to connect to your db.
+
+    SqlMetrics.configure do |config|
+      config.host = '127.0.0.1'
+      config.db_name = 'my_metrics_db'
+      config.user = 'my_postgres_user'
+      config.password = 'my_password'
+    end
+
+### Track a event
+
+A simple event can look like this:
+
+    SqlMetrics.track('event_name', {:a_property => 'hello world', :another_property => 'hello user'})
+
+You can also pass a rails request object from a controller:
+
+    SqlMetrics.track('event_name', {:a_property => 'hello world', :another_property => 'hello user'}, request)
+
+This will automatically fetch properties like the user agent, client ip, requested url, etc
 
 ## Development
 
