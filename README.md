@@ -41,11 +41,24 @@ Now you need to tell the gem how to connect to your db.
 
 A simple event can look like this:
 
-    SqlMetrics.track('event_name', {:a_property => 'hello world', :another_property => 'hello user'})
+    SqlMetrics.track(
+      'event_name',
+      {
+        :a_property => 'hello world',
+        :another_property => 'hello user'
+      }
+    )
 
 You can also pass a rails request object from a controller:
 
-    SqlMetrics.track('event_name', {:a_property => 'hello world', :another_property => 'hello user'}, request)
+    SqlMetrics.track(
+      'event_name',
+      {
+        :a_property => 'hello world',
+        :another_property => 'hello user'
+      },
+      request
+    )
 
 This will automatically fetch properties like the user agent, client ip, requested url, etc
 
