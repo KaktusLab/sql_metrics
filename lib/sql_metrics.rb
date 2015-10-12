@@ -70,8 +70,6 @@ module SqlMetrics
         '#{name}',
         '#{properties.to_json}'
       );")
-
-    puts 'test'
   rescue => e
     Rails.logger.error e
     Rails.logger.error e.backtrace.join("\n")
