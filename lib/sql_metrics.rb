@@ -16,6 +16,7 @@ module SqlMetrics
       self.password = nil
       self.database_schema = 'public'
       self.event_table_name = 'events'
+      self.bots_regex = /Googlebot|Pingdom|bing|Yahoo|Amazon|Twitter|Yandex|majestic12/i
     end
   end
 
@@ -55,8 +56,7 @@ module SqlMetrics
 
   def self.track_now(created_at, name, properties, options)
     unless options[:filter_bots] == false
-      bots = /Googlebot|Pingdom|bing|Yahoo|Amazon|Twitter|Yandex|majestic12/i
-      return if properties[:user_agent] and properties[:user_agent].match(bots)
+      return if properties[:user_agent] and properties[:user_agent].match(SqlMetrics.configuration.bots_regex)
     end
 
     conn = pg_connection
