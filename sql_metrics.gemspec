@@ -32,5 +32,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec"
 
   spec.add_runtime_dependency "pg"
+  spec.add_runtime_dependency "logging"
   spec.add_runtime_dependency "geoip"
 end
