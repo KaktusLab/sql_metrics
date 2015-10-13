@@ -16,6 +16,7 @@ module SqlMetrics
       self.password = nil
       self.database_schema = 'public'
       self.event_table_name = 'events'
+
       self.bots_regex = /Googlebot|Pingdom|bing|Yahoo|Amazon|Twitter|Yandex|majestic12/i
     end
   end
