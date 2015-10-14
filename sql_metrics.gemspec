@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = %q{Track events in your own postgres database.}
   spec.description   = %q{A simple gem to track metric events in your own postgres or Amazon Redshift database.}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/KaktusLab/sql_metrics"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }

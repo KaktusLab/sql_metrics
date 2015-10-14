@@ -2,15 +2,6 @@
 
 A simple gem to track metric events in your own postgres or Amazon Redshift database.
 
-## Why?
-I got sick of being limited by tracking services dashboards...and also of paying these services crazy monthy fee's.
-
-Yes I know about Google Analytics...but I am also tired of GA missing 20-30% of my data.
-
-So I went ahead a rewrote a library I had written to store events in mixpanel to instead put save them into a postgres database (which means it will also work with Amazon Redshift!).
-
-I have it running just fine on heroku's postgres offering with a site thats being hit with ~ 250k users per month.
-
 ## Features
 
 * Asynchronously stores events into Postgres or Amazon Redshift based db
@@ -19,7 +10,6 @@ I have it running just fine on heroku's postgres offering with a site thats bein
 
 ## Todo
 
-* Write some unit tests
 * Batch inserting events to db to improve performance under very high load
 * Track Users (just because thats a common thing to do besides tracking raw events)
 * Offer SQL based dashboard that allows to run custom queries and also render charts
