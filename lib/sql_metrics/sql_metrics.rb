@@ -44,7 +44,12 @@ module SqlMetrics
           properties[:is_bot] = false
         end
 
+        if warden_user_key = request.session["warden.user.user.key"]
+          properties[:current_user_id] = warden_user_key.first.first
+        end
+
         properties[:session_id] = request.session_options[:id]
+        properties[:query_parameters] = request.query_parameters
         properties[:remote_ip] = request.remote_ip
 
         unless options and options[:geo_lookup] == false
