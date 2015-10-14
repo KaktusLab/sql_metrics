@@ -2,6 +2,8 @@
 
 A simple gem to track metric events in your own postgres or Amazon Redshift database.
 
+[![Gem Version](https://badge.fury.io/rb/sql_metrics.svg)](https://badge.fury.io/rb/sql_metrics)
+
 ## Features
 
 * Asynchronously stores events into Postgres or Amazon Redshift based db
