@@ -70,7 +70,7 @@ You can also pass a rails request object from a controller:
       request
     )
 
-The gem automaticall filters bots for you using the user_agent property from the rails request object...you can disable this if you want:
+The gem automatically filters bots for you using the user_agent property from the rails request object...you can disable this if you want:
 
     SqlMetrics.track(
       'event_name',
@@ -81,6 +81,20 @@ The gem automaticall filters bots for you using the user_agent property from the
       request,
       {
         :filter_bots => false
+      }
+    )
+
+The gem also automatically performs a geo lookup using the remote_ip property from the rails request object...you can disable this if you want:
+
+    SqlMetrics.track(
+      'event_name',
+      {
+        :a_property => 'hello world',
+        :another_property => 'hello user'
+      },
+      request,
+      {
+        :geo_lookup => false
       }
     )
 

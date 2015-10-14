@@ -35,7 +35,7 @@ module SqlMetrics
         properties[:session_id] = request.session_options[:id]
         properties[:remote_ip] = request.remote_ip
 
-        unless options and options[:reverse_ip_lookup] == false
+        unless options and options[:geo_lookup] == false
           if properties[:remote_ip] and geo_object = Geocoder.search(properties[:remote_ip]).first
             properties[:remote_city] = geo_object.city
             properties[:remote_country] = geo_object.country
