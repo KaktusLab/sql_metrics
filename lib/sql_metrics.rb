@@ -30,6 +30,20 @@ module SqlMetrics
   class << self
     attr_accessor :configuration
 
+    def track_now(created_at, name, properties = {}, request = nil, options = nil)
+      properties = merge_request_and_options_into_properties(properties, request, options)
+
+      unless options and options[:filter_bots] == false
+        return false if properties[:user_agent] and properties[:user_agent].match(SqlMetrics.configuration.bots_regex)
+      end
+
+      send_async_query(created_at, name, properties)
+
+    rescue => e
+      SqlMetrics.configuration.logger.error e
+      SqlMetrics.configuration.logger.error e.backtrace.join("\n")
+    end
+
     def merge_request_and_options_into_properties(properties, request, options)
       if request
         properties[:user_agent] = request.user_agent
@@ -45,7 +59,7 @@ module SqlMetrics
           end
         end
 
-        properties[:referrer] = request.referer
+        properties[:referer] = request.referer
         referer = Addressable::URI.parse(request.referer)
         properties[:referrer_host] = referer.host if referer
 
@@ -57,17 +71,17 @@ module SqlMetrics
       properties
     end
 
-    def send_async_query(name, properties)
-      pg_connection.send_query(build_psql_query(name, properties))
+    def send_async_query(created_at, name, properties)
+      pg_connection.send_query(build_psql_query(created_at, name, properties))
     end
 
-    def build_psql_query(name, properties)
+    def build_psql_query(created_at, name, properties)
       "INSERT INTO #{SqlMetrics.configuration.event_table_name} (
         created_at,
         name,
         properties
       ) VALUES (
-        '#{Time.now.utc}',
+        '#{created_at}',
         '#{name}',
         '#{properties.to_json}'
       );"
@@ -83,16 +97,11 @@ module SqlMetrics
   end
 
   def self.track(name, properties = {}, request = nil, options = nil)
-    properties = merge_request_and_options_into_properties(properties, request, options)
+    created_at = Time.now.utc
 
-    unless options and options[:filter_bots] == false
-      return false if properties[:user_agent] and properties[:user_agent].match(SqlMetrics.configuration.bots_regex)
+    Thread.new do
+      track_now(created_at, name, properties, request, options)
     end
-
-    send_async_query(name, properties)
-  rescue => e
-    SqlMetrics.configuration.logger.error e
-    SqlMetrics.configuration.logger.error e.backtrace.join("\n")
   end
 
   def self.pg_connection
