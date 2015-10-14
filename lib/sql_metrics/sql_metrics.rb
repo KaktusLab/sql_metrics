@@ -8,6 +8,10 @@ module SqlMetrics
       end
     end
 
+    def track_user(user)
+
+    end
+
     def create_events_table
       conn = pg_connection
 
@@ -20,7 +24,7 @@ module SqlMetrics
       properties = merge_request_and_options_into_properties(properties, request, options)
 
       unless options and options[:filter_bots] == false
-        return false if properties[:user_agent] and properties[:user_agent].match(SqlMetrics.configuration.bots_regex)
+        return false if properties[:is_bot]
       end
 
       send_async_query(created_at, name, properties)
@@ -33,6 +37,13 @@ module SqlMetrics
     def merge_request_and_options_into_properties(properties, request, options)
       if request
         properties[:user_agent] = request.user_agent
+
+        if properties[:user_agent] and properties[:user_agent].match(SqlMetrics.configuration.bots_regex)
+          properties[:is_bot] = true
+        else
+          properties[:is_bot] = false
+        end
+
         properties[:session_id] = request.session_options[:id]
         properties[:remote_ip] = request.remote_ip
 
