@@ -104,7 +104,7 @@ This will automatically fetch properties like the user agent, client ip, request
 
 ## Additional Config parameters
 
-### Change DB Table name to use
+### Change default DB Table name
 
     SqlMetrics.configure do |config|
       config.host = '127.0.0.1'
@@ -115,7 +115,7 @@ This will automatically fetch properties like the user agent, client ip, request
       config.event_table_name = 'my_custom_events_table'
     end
 
-### Change DB Schema to use
+### Change default DB Schema
 
     SqlMetrics.configure do |config|
       config.host = '127.0.0.1'

@@ -5,6 +5,7 @@ module SqlMetrics
     require 'pg'
     require 'logger'
     require 'json'
+    require 'geocoder'
 
     attr_accessor :host, :port, :options, :tty, :db_name, :user, :password, :database_schema, :event_table_name,
                   :bots_regex, :logger
@@ -35,15 +36,6 @@ module SqlMetrics
         properties[:session_id] = request.session_options[:id]
         properties[:remote_ip] = request.remote_ip
 
-        unless options and options[:geo_lookup] == false
-          if properties[:remote_ip] and geo_object = Geocoder.search(properties[:remote_ip]).first
-            properties[:remote_city] = geo_object.city
-            properties[:remote_country] = geo_object.country
-            properties[:remote_country_code] = geo_object.country_code
-            properties[:remote_coordinates] = geo_object.coordinates
-          end
-        end
-
         properties[:referrer] = request.referer
         referer = Addressable::URI.parse(request.referer)
         properties[:referrer_host] = referer.host if referer
@@ -51,6 +43,15 @@ module SqlMetrics
         properties[:requested_url] = request.fullpath
         fullpath = Addressable::URI.parse(request.fullpath)
         properties[:requested_url_host] = fullpath.host if fullpath
+      end
+
+      unless options and options[:geo_lookup] == false
+        if properties[:remote_ip] and geo_object = Geocoder.search(properties[:remote_ip]).first
+          properties[:remote_city] = geo_object.city
+          properties[:remote_country] = geo_object.country
+          properties[:remote_country_code] = geo_object.country_code
+          properties[:remote_coordinates] = geo_object.coordinates
+        end
       end
 
       properties
