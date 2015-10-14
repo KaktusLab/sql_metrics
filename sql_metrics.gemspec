@@ -25,5 +25,5 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency "pg"
   spec.add_runtime_dependency "logging"
-  spec.add_runtime_dependency "geoip"
+  spec.add_runtime_dependency "geocoder"
 end
