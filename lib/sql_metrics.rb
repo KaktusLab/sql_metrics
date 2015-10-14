@@ -29,17 +29,19 @@ module SqlMetrics
   class << self
     attr_accessor :configuration
 
-    def merge_request_into_properties(properties, request)
+    def merge_request_and_options_into_properties(properties, request, options)
       if request
         properties[:user_agent] = request.user_agent
         properties[:session_id] = request.session_options[:id]
         properties[:remote_ip] = request.remote_ip
 
-        if properties[:remote_ip] and geo_object = Geocoder.search(properties[:remote_ip]).first
-          properties[:remote_city] = geo_object.city
-          properties[:remote_country] = geo_object.country
-          properties[:remote_country_code] = geo_object.country_code
-          properties[:remote_coordinates] = geo_object.coordinates
+        unless options and options[:reverse_ip_lookup] == false
+          if properties[:remote_ip] and geo_object = Geocoder.search(properties[:remote_ip]).first
+            properties[:remote_city] = geo_object.city
+            properties[:remote_country] = geo_object.country
+            properties[:remote_country_code] = geo_object.country_code
+            properties[:remote_coordinates] = geo_object.coordinates
+          end
         end
 
         properties[:referrer] = request.referer
@@ -80,7 +82,7 @@ module SqlMetrics
   end
 
   def self.track(name, properties = {}, request = nil, options = nil)
-    properties = merge_request_into_properties(properties, request)
+    properties = merge_request_and_options_into_properties(properties, request, options)
 
     unless options and options[:filter_bots] == false
       return false if properties[:user_agent] and properties[:user_agent].match(SqlMetrics.configuration.bots_regex)
