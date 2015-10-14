@@ -36,11 +36,7 @@ Or install it yourself as:
 
 ### Setup database and table
 
-You need to create the following table in your postgres or redshift database:
-
-    CREATE TABLE events (created_at timestamp, name varchar(200), properties json);
-
-Now you need to tell the gem how to connect to your db. So simply create a file called sql_metrics.rb into your config/libs folder with the config:
+Tell the gem how to connect to your db. So simply create a file called sql_metrics.rb into your config/libs folder with the config:
 
     SqlMetrics.configure do |config|
       config.host = '127.0.0.1'
@@ -48,6 +44,10 @@ Now you need to tell the gem how to connect to your db. So simply create a file 
       config.user = 'my_postgres_user'
       config.password = 'my_password'
     end
+
+Then to create the required events table just run this rake task:
+
+    rake sql_metrics:create_events_table
 
 ### Track a event
 

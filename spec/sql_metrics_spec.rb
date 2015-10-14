@@ -20,20 +20,24 @@ describe SqlMetrics do
   end
 
   it 'tracks a simple event' do
-    expect(SqlMetrics).to receive(:send_async_query).with('event_name', {}).and_return(true)
+    expect(SqlMetrics).to receive(:send_async_query).with('2015-10-14 18:51:07.530378000 +0000', 'event_name', {}).and_return(true)
 
-    SqlMetrics.track(
+    SqlMetrics.send(
+        :track_now,
+        '2015-10-14 18:51:07.530378000 +0000',
         'event_name'
     )
   end
 
   it 'tracks a simple event with properties' do
-    expect(SqlMetrics).to receive(:send_async_query).with('event_name', {
+    expect(SqlMetrics).to receive(:send_async_query).with('2015-10-14 18:51:07.530378000 +0000', 'event_name', {
                                                                           :a_property => 'hello world',
                                                                           :another_property => 'hello user'
                                                                       }).and_return(true)
 
-    SqlMetrics.track(
+    SqlMetrics.send(
+        :track_now,
+        '2015-10-14 18:51:07.530378000 +0000',
         'event_name',
         {
             :a_property => 'hello world',
