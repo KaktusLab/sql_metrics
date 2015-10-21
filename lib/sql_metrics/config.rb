@@ -9,6 +9,7 @@ module SqlMetrics
                   :bots_regex, :logger
 
     def initialize
+
       self.host = nil
       self.port = 5432
       self.options = nil
@@ -19,7 +20,7 @@ module SqlMetrics
       self.database_schema = 'public'
       self.event_table_name = 'events'
 
-      self.bots_regex = /Googlebot|Pingdom|bing|Yahoo|Amazon|Twitter|Yandex|majestic12/i
+      self.bots_regex = /Googlebot|Pingdom|bing|Yahoo|Amazon|Twitter|Yandex|baidu|majestic12/i
 
       self.logger = defined?(Rails) ? Rails.logger : Logger.new(STDOUT)
     end
