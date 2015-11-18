@@ -9,9 +9,10 @@ module SqlMetrics
     end
 
     def track_user(user)
-
+	//Throw a non-implemented warning
     end
 
+    // Perhaps put these configuration commands into a different file, class, etc.
     def create_events_table
       conn = pg_connection
 
@@ -21,6 +22,7 @@ module SqlMetrics
     private
 
     def track_now(created_at, name, properties = {}, request = nil, options = nil)
+      //error check input types for the database
       properties = merge_request_and_options_into_properties(properties, request, options)
 
       unless options and options[:filter_bots] == false
@@ -29,12 +31,13 @@ module SqlMetrics
 
       send_async_query(created_at, name, properties)
 
-    rescue => e
+    rescue => e //Best practice to catch specific exception types
       SqlMetrics.configuration.logger.error e
       SqlMetrics.configuration.logger.error e.backtrace.join("\n")
     end
 
     def merge_request_and_options_into_properties(properties, request, options)
+      //How can we break this up...
       if request
         properties[:user_agent] = request.user_agent
 
@@ -52,6 +55,7 @@ module SqlMetrics
         properties[:query_parameters] = request.query_parameters
         properties[:remote_ip] = request.remote_ip
 
+        //helper method?
         unless options and options[:geo_lookup] == false
           if properties[:remote_ip] and geo_object = Geocoder.search(properties[:remote_ip]).first
             properties[:remote_city] = geo_object.city
@@ -78,6 +82,7 @@ module SqlMetrics
     end
 
     def build_psql_query(created_at, name, properties)
+      //Catch insertion error
       "INSERT INTO #{SqlMetrics.configuration.event_table_name} (
         created_at,
         name,
@@ -90,6 +95,7 @@ module SqlMetrics
     end
 
     def pg_connection
+      //Catch connection error
       PGconn.open(:dbname => SqlMetrics.configuration.db_name,
                   :host => SqlMetrics.configuration.host,
                   :port => SqlMetrics.configuration.port,
